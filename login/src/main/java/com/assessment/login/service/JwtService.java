@@ -9,14 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collections;
 
 @Service
 public class JwtService implements UserDetailsService {
@@ -30,37 +28,19 @@ public class JwtService implements UserDetailsService {
     @Autowired
     private JwtUtil jwtUtil;
 
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepo.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        User user = userRepo.findById(username).get();
-
-        if (user != null) {
-
-            return new org.springframework.security.core.userdetails.User(
-                    user.getUserName(),
-                    user.getUserPassword(),
-                    getAuthority(user)
-            );
-        } else {
-            throw new UsernameNotFoundException("User note found:" + username);
-        }
-    }
-
-    private Set getAuthority(User user) {
-        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-
-        user.getRole().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName()));
-
-        });
-
-        return authorities;
+        return new org.springframework.security.core.userdetails.User(
+                user.getUserName(),
+                user.getUserPassword(),
+                Collections.emptyList()
+        );
     }
 
     public LoginResponse createJwtToken(LoginRequest loginRequest) throws Exception {
-
         String username = loginRequest.getUsername();
         String userPassword = loginRequest.getPassword();
 
@@ -68,24 +48,17 @@ public class JwtService implements UserDetailsService {
 
         UserDetails userDetails = loadUserByUsername(username);
         String newGeneratedToken = jwtUtil.generateToken(userDetails);
-        User user = userRepo.findById(username).get();
+        User user = userRepo.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        LoginResponse LoginResponse = new LoginResponse(
-                user,
-                newGeneratedToken);
-
-        return LoginResponse;
-
+        return new LoginResponse(user, newGeneratedToken);
     }
 
     private void authenticate(String userName, String userPassword) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, userPassword));
         } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
+            throw new BadCredentialsException("INVALID_CREDENTIALS", e);
         }
     }
-
-
-
 }
