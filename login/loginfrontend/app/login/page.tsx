@@ -39,7 +39,6 @@ export default function LoginPage() {
         password: password.trim(),
       });
 
-      // Save token and user in context & localStorage
       login(response.jwtToken, response.user);
       router.push("/dashboard");
     } catch (err: unknown) {
@@ -54,12 +53,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md">
+    <div className="flex-1 flex items-center justify-center px-4 py-8 sm:py-12 md:py-16">
+      <div className="w-full max-w-sm sm:max-w-md mx-auto">
         {/* Card Container */}
-        <div className="bg-white dark:bg-zinc-900 shadow-xl shadow-zinc-200/50 dark:shadow-black/50 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 sm:p-10 transition-colors">
-          <div className="text-center mb-8">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 mx-auto flex items-center justify-center mb-4">
+        <div className="bg-white dark:bg-zinc-900 shadow-xl shadow-zinc-200/50 dark:shadow-black/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 transition-colors">
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 mx-auto flex items-center justify-center mb-3 sm:mb-4">
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -74,19 +73,19 @@ export default function LoginPage() {
                 />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
               Welcome back
             </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1.5">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
               Sign in with your credentials to access your account
             </p>
           </div>
 
           {/* Error Banner */}
           {errorMessage && (
-            <div className="mb-6 p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 flex items-start gap-3">
+            <div className="mb-5 sm:mb-6 p-3.5 sm:p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 flex items-start gap-2.5 sm:gap-3">
               <svg
-                className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5"
+                className="w-4 h-4 sm:w-5 sm:h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -98,14 +97,14 @@ export default function LoginPage() {
                   d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <div className="text-xs text-rose-700 dark:text-rose-300 font-medium">
+              <div className="text-xs text-rose-700 dark:text-rose-300 font-medium leading-relaxed">
                 {errorMessage}
               </div>
             </div>
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
             <div>
               <label
                 htmlFor="username"
@@ -113,18 +112,16 @@ export default function LoginPage() {
               >
                 Username
               </label>
-              <div className="relative">
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  required
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="e.g. heshan"
-                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-800/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 text-sm transition-all"
-                />
-              </div>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="e.g. heshan"
+                className="w-full px-3.5 sm:px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-800/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 text-base sm:text-sm transition-all"
+              />
             </div>
 
             <div>
@@ -143,12 +140,12 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full pl-4 pr-11 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-800/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 text-sm transition-all"
+                  className="w-full pl-3.5 sm:pl-4 pr-11 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-800/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 text-base sm:text-sm transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 text-xs"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 text-xs p-1"
                   aria-label="Toggle password visibility"
                 >
                   {showPassword ? (
@@ -168,7 +165,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 shadow-md shadow-indigo-600/30 transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+              className="w-full min-h-[44px] py-2.5 sm:py-3 px-4 rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 shadow-md shadow-indigo-600/30 transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base mt-2"
             >
               {loading ? (
                 <>
@@ -185,12 +182,12 @@ export default function LoginPage() {
           </form>
 
           {/* Footer note */}
-          <div className="mt-8 pt-6 border-t border-zinc-100 dark:border-zinc-800 text-center">
+          <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-zinc-100 dark:border-zinc-800 text-center">
             <p className="text-xs text-zinc-500 dark:text-zinc-400">
               Don&apos;t have an account yet?{" "}
               <Link
                 href="/signup"
-                className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 hover:underline"
+                className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 hover:underline inline-block p-1"
               >
                 Create one now
               </Link>
