@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -17,11 +18,14 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "zephyratech_secret_key_which_is_very_secure_and_at_least_512_bits_long_for_hs512_algorithm_1234567890";
-    private static final int TOKEN_VALIDITY = 3600 * 5; // 5 hours
+    @Value("${jwt.secret:zephyratech_secret_key_which_is_very_secure_and_at_least_512_bits_long_for_hs512_algorithm_1234567890}")
+    private String secretKey;
+
+    @Value("${jwt.validity-seconds:18000}")
+    private long tokenValiditySeconds;
 
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+        return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
     public String getUserNamaFromToken(String token) {
@@ -57,7 +61,7 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000L))
+                .setExpiration(new Date(System.currentTimeMillis() + tokenValiditySeconds * 1000L))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
     }

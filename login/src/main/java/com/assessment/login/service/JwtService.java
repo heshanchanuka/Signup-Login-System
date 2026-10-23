@@ -6,6 +6,7 @@ import com.assessment.login.entity.User;
 import com.assessment.login.repo.UserRepo;
 import com.assessment.login.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ public class JwtService implements UserDetailsService {
     private UserRepo userRepo;
 
     @Autowired
+    @Lazy
     private AuthenticationManager authenticationManager;
 
     @Autowired

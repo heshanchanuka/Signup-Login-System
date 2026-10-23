@@ -4,6 +4,7 @@ import com.assessment.login.dto.SignupRequest;
 import com.assessment.login.entity.User;
 import com.assessment.login.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,17 +18,33 @@ public class UserService {
     private UserRepo userRepo;
 
     public User registerNewUser(SignupRequest signUpRequest) {
-        if (userRepo.existsById(signUpRequest.getUserName())) {
-            throw new RuntimeException("User with username '" + signUpRequest.getUserName() + "' already exists");
+        if (signUpRequest == null) {
+            throw new IllegalArgumentException("Request body cannot be null");
+        }
+        if (signUpRequest.getUserName() == null || signUpRequest.getUserName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Username is required");
+        }
+        if (signUpRequest.getUserPassword() == null || signUpRequest.getUserPassword().trim().isEmpty()) {
+            throw new IllegalArgumentException("Password is required");
+        }
+
+        String username = signUpRequest.getUserName().trim();
+        if (userRepo.existsById(username)) {
+            throw new IllegalStateException("User with username '" + username + "' already exists");
         }
 
         User user = new User();
-        user.setUserName(signUpRequest.getUserName());
+        user.setUserName(username);
         user.setUserPassword(getEncodedPassword(signUpRequest.getUserPassword()));
         user.setUserFirstName(signUpRequest.getUserFirstName());
         user.setUserLastName(signUpRequest.getUserLastName());
 
         return userRepo.save(user);
+    }
+
+    public User getUserByUsername(String username) {
+        return userRepo.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 
     public String getEncodedPassword(String password) {

@@ -41,7 +41,10 @@ public class WebSecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/authentication", "/user/register-new-user").permitAll()
+                        .requestMatchers(
+                                "/authentication", "/authenticate", "/login",
+                                "/user/register-new-user", "/user/signup", "/user/register"
+                        ).permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
